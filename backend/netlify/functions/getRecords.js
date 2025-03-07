@@ -4,7 +4,7 @@ exports.handler = async (event) => {
   const token = process.env.AIRTABLE_TOKEN;
   const baseId = process.env.BASE_ID;
   const secretKey = process.env.SECRET_API_KEY;
-  const tableName = "Table1"; //"Footages"; // Make sure this matches your actual Airtable table name
+  const tableName = "Footages";
 
   const base = new Airtable({ apiKey: token }).base(baseId);
 
@@ -16,7 +16,6 @@ exports.handler = async (event) => {
     "Content-Type": "application/json",
   };
 
-  // 🔥 Handle preflight OPTIONS request (important for CORS)
   if (event.httpMethod === "OPTIONS") {
     return {
       statusCode: 200,
@@ -30,8 +29,8 @@ exports.handler = async (event) => {
   if (!clientKey || clientKey !== secretKey) {
     return {
       statusCode: 403,
-      headers, // 🔥 Add CORS headers here too
-      body: JSON.stringify({ error: "Unauthorized access jafet" }),
+      headers,
+      body: JSON.stringify({ error: "Unauthorized access to this data" }),
     };
   }
 
@@ -40,13 +39,13 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
-      headers, // 🔥 Add CORS headers here too
+      headers,
       body: JSON.stringify(records.map((record) => record.fields)),
     };
   } catch (error) {
     return {
       statusCode: 500,
-      headers, // 🔥 Add CORS headers here too
+      headers,
       body: JSON.stringify({ error: error.message }),
     };
   }
